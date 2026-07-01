@@ -84,6 +84,25 @@ interface ConnectionsInterface
     ): ResponseInterface;
 
     /**
+     * Get the enabled clients for a Connection.
+     * Required scope: `read:connections`.
+     *
+     * @param string                       $id         connection (by it's ID) to query
+     * @param null|array<null|int|string>  $parameters Optional. Additional query parameters to pass with the API request. See @see for supported options.
+     * @param null|RequestOptions          $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Connections/get_enabled_clients_for_connections
+     */
+    public function getEnabledClients(
+        string $id,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Get connection(s).
      * Required scope: `read:connections`.
      *
@@ -115,6 +134,25 @@ interface ConnectionsInterface
     public function update(
         string $id,
         ?array $body = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Update the enabled clients for a Connection.
+     * Required scope: `update:connections`.
+     *
+     * @param string              $id      connection (by it's ID) to update
+     * @param array<mixed>        $body    Body content to pass with the API request. An array of objects with `client_id` (string) and `status` (boolean) properties.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Connections/patch_enabled_clients_for_connections
+     */
+    public function updateEnabledClients(
+        string $id,
+        array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 }

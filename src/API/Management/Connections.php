@@ -115,6 +115,28 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
             ->call();
     }
 
+    public function getEnabledClients(
+        string $id,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['connections', $id, 'clients'])
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
     public function update(
         string $id,
         ?array $body = null,
@@ -130,6 +152,24 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         return $this->getHttpClient()
             ->method('patch')->addPath(['connections', $id])
             ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function updateEnabledClients(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('patch')->addPath(['connections', $id, 'clients'])
+            ->withBody($body)
             ->withOptions($options)
             ->call();
     }

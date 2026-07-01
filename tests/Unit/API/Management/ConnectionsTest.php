@@ -86,3 +86,41 @@ test('update() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
+
+test('getEnabledClients() issues an appropriate request', function(): void {
+    $id = 'con_testConnection10';
+
+    $this->endpoint->getEnabledClients($id);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id . '/clients');
+    expect($this->api->getRequestQuery())->toBeEmpty();
+});
+
+test('getEnabledClients() issues an appropriate request with parameters', function(): void {
+    $id = 'con_testConnection10';
+
+    $this->endpoint->getEnabledClients($id, ['take' => 10, 'from' => 'cursor123']);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id . '/clients');
+    expect($this->api->getRequestQuery())->toContain('take=10');
+    expect($this->api->getRequestQuery())->toContain('from=cursor123');
+});
+
+test('updateEnabledClients() issues an appropriate request', function(): void {
+    $id = 'con_testConnection10';
+    $body = [
+        ['client_id' => 'client123', 'status' => true],
+        ['client_id' => 'client456', 'status' => false],
+    ];
+
+    $this->endpoint->updateEnabledClients($id, $body);
+
+    $request_body = $this->api->getRequestBody();
+
+    expect($request_body)->toEqual($body);
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id . '/clients');
+    expect($this->api->getRequestQuery())->toBeEmpty();
+});
